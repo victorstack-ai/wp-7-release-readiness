@@ -1,0 +1,14 @@
+[project]
+name = "wp-7-release-readiness"
+version = "0.1.0"
+dependencies = [
+    "pytest",
+    "ruff",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
