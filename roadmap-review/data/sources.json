@@ -1,0 +1,44 @@
+[
+  {
+    "id": "wp-roadmap",
+    "title": "WordPress Roadmap",
+    "url": "https://wordpress.org/about/roadmap/",
+    "type": "roadmap"
+  },
+  {
+    "id": "release-schedule-2026",
+    "title": "Proposal: 2026 Major Release Schedule",
+    "url": "https://make.wordpress.org/project/2025/12/18/proposal-2026-major-release-schedule/",
+    "type": "schedule"
+  },
+  {
+    "id": "wp-7-0-call-volunteers",
+    "title": "WordPress 7.0 Call for Volunteers",
+    "url": "https://make.wordpress.org/test/2026/01/09/xpost-wordpress-7-0-call-for-volunteers/",
+    "type": "schedule"
+  },
+  {
+    "id": "ai-team-announcement",
+    "title": "Announcing the Formation of the WordPress AI Team",
+    "url": "https://wordpress.org/news/2025/05/announcing-the-formation-of-the-wordpress-ai-team/",
+    "type": "ai-goals"
+  },
+  {
+    "id": "ai-building-blocks",
+    "title": "AI Building Blocks for WordPress",
+    "url": "https://make.wordpress.org/ai/2025/07/17/ai-building-blocks/",
+    "type": "ai-goals"
+  },
+  {
+    "id": "six-months-core-ai",
+    "title": "Six Months of Core AI: From Building Blocks to Core Release",
+    "url": "https://make.wordpress.org/ai/2025/12/03/six-months-of-core-ai/",
+    "type": "ai-goals"
+  },
+  {
+    "id": "ai-experiments-plugin",
+    "title": "AI Experiments Plugin",
+    "url": "https://wordpress.org/plugins/ai/",
+    "type": "ai-goals"
+  }
+]
