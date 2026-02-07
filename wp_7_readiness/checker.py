@@ -9,13 +9,50 @@ class WP7ReadinessChecker:
         self.issues = []
 
     def check_php_version(self):
-        # In a real scenario, we might check .htaccess or composer.json
-        # Here we'll simulate a check for PHP 8.1+ which is likely for WP 7.0
-        self.issues.append({
-            "component": "PHP",
-            "status": "Warning",
-            "message": "Ensure your environment supports PHP 8.1+ for WordPress 7.0."
-        })
+        import subprocess
+        import re
+
+        try:
+            result = subprocess.run(["php", "-v"], capture_output=True, text=True, check=True)
+            output = result.stdout
+            # Match "PHP 7.4.3" or "PHP 8.2.0"
+            match = re.search(r"PHP (\d+\.\d+\.\d+)", output)
+            if match:
+                version_str = match.group(1)
+                major, minor, patch = map(int, version_str.split('.'))
+                
+                # Logic: Block < 7.4
+                if major < 7 or (major == 7 and minor < 4):
+                    self.issues.append({
+                        "component": "PHP Version",
+                        "status": "CRITICAL BLOCKER",
+                        "message": f"Detected PHP {version_str}. WordPress 7.0 upgrade will be BLOCKED. You MUST upgrade to PHP 7.4+ (8.2+ recommended)."
+                    })
+                elif (major == 7 and minor >= 4) or (major == 8 and minor < 2):
+                     self.issues.append({
+                        "component": "PHP Version",
+                        "status": "Warning",
+                        "message": f"Detected PHP {version_str}. Upgrade allowed, but PHP 8.2+ is recommended for WordPress 7.0."
+                    })
+                else:
+                    self.issues.append({
+                        "component": "PHP Version",
+                        "status": "Pass",
+                        "message": f"Detected PHP {version_str}. Ready for WordPress 7.0."
+                    })
+            else:
+                 self.issues.append({
+                    "component": "PHP Version",
+                    "status": "Unknown",
+                    "message": "Could not parse 'php -v' output. Ensure PHP 7.4+ is installed."
+                })
+
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            self.issues.append({
+                "component": "PHP Version",
+                "status": "Warning",
+                "message": "PHP executable not found in PATH. Cannot verify version compatibility (Requires PHP 7.4+)."
+            })
 
     def check_theme_type(self):
         themes_path = os.path.join(self.wp_path, "wp-content", "themes")
