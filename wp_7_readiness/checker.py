@@ -32,7 +32,7 @@ class WP7ReadinessChecker:
                      self.issues.append({
                         "component": "PHP Version",
                         "status": "Warning",
-                        "message": f"Detected PHP {version_str}. Upgrade allowed, but PHP 8.2+ is recommended for WordPress 7.0."
+                        "message": f"Detected PHP {version_str}. Upgrade allowed, but PHP 8.2+ is highly recommended for WordPress 7.0 features."
                     })
                 else:
                     self.issues.append({
@@ -53,6 +53,28 @@ class WP7ReadinessChecker:
                 "status": "Warning",
                 "message": "PHP executable not found in PATH. Cannot verify version compatibility (Requires PHP 7.4+)."
             })
+
+    def check_plugins(self):
+        plugins_path = os.path.join(self.wp_path, "wp-content", "plugins")
+        if not os.path.exists(plugins_path):
+            return
+
+        multilingual_plugins = ['sitepress-multilingual-cms', 'polylang', 'qtranslate-xt']
+        collaboration_plugins = ['edit-flow', 'oasis-workflow', 'co-authors-plus']
+
+        for plugin in os.listdir(plugins_path):
+            if plugin in multilingual_plugins:
+                self.issues.append({
+                    "component": f"Plugin: {plugin}",
+                    "status": "Info",
+                    "message": "Multilingual plugin detected. WordPress 7.0 (Phase 4) will introduce native multilingual support. Plan for potential migration."
+                })
+            if plugin in collaboration_plugins:
+                self.issues.append({
+                    "component": f"Plugin: {plugin}",
+                    "status": "Info",
+                    "message": "Collaboration plugin detected. WordPress 7.0 (Phase 3) enhances native collaboration features."
+                })
 
     def check_theme_type(self):
         themes_path = os.path.join(self.wp_path, "wp-content", "themes")
@@ -78,6 +100,7 @@ class WP7ReadinessChecker:
             sys.exit(1)
         
         self.check_php_version()
+        self.check_plugins()
         self.check_theme_type()
         return self.issues
 

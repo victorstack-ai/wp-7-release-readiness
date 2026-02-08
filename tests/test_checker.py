@@ -55,6 +55,27 @@ def test_checker_report_php_modern(mock_subprocess, mock_wp_site):
     assert php_issues[0]['status'] == 'Pass'
 
 @patch('subprocess.run')
+def test_plugin_check(mock_subprocess, mock_wp_site):
+    # Just to pass the PHP check quietly
+    mock_subprocess.return_value = MagicMock(stdout="PHP 8.2.0")
+
+    plugins_path = os.path.join(mock_wp_site, "wp-content", "plugins")
+    os.makedirs(plugins_path)
+    
+    # Create a multilingual plugin
+    os.makedirs(os.path.join(plugins_path, "polylang"))
+    # Create a collaboration plugin
+    os.makedirs(os.path.join(plugins_path, "edit-flow"))
+
+    checker = WP7ReadinessChecker(mock_wp_site)
+    results = checker.run()
+
+    assert any('Plugin: polylang' in r['component'] for r in results)
+    assert any('Plugin: edit-flow' in r['component'] for r in results)
+    assert "Phase 4" in [r['message'] for r in results if 'polylang' in r['component']][0]
+    assert "Phase 3" in [r['message'] for r in results if 'edit-flow' in r['component']][0]
+
+@patch('subprocess.run')
 def test_checker_report_php_missing(mock_subprocess, mock_wp_site):
     # Simulate missing PHP
     mock_subprocess.side_effect = FileNotFoundError
